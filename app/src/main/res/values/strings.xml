@@ -4,5 +4,27 @@
     <string name="app_name">ProyectoLV1.2</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="orderbyAlbum">Ordenar por album</string>
+    <string name="orderbyAutor">Ordenar por autor</string>
+    <string name="eliminar">Eliminar</string>
+    <string name="anadir">Añadir</string>
+    <string name="editar">Editar</string>
+    <string name="msgeliminar">Se ha eliminado un album.</string>
+    <string name="msganadir">Album añadido!</string>
+    <string name="msgeditar">Album editado correctamente</string>
+    <string name="tituloAnadir">Nuevo Album.</string>
+    <string name="tituloEditar">Editar Album.</string>
+    <string name="titulo">Biblioteca Musical</string>
+    <string-array name="select_discografica">
+        <item>Parlophone</item>
+        <item>Universal Music</item>
+        <item>Virgin</item>
+        <item>Warner Music</item>
+        <item>Sony Music</item>
+        <item>EMI</item>
+        <item>Poland</item>
+        <item>India</item>
+    </string-array>
+
 
 </resources>
