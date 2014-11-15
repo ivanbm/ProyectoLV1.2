@@ -111,6 +111,21 @@ public class MainActivity extends Activity {
         inflater.inflate(R.menu.contextual, menu);
     }
 
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("discos", datos);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        datos = (ArrayList<Disco>)savedInstanceState.getSerializable("discos");
+        mostrarDiscos();
+    }
+
         /*-------------------------------------------*/
         /*              METODOS PROPIOS              */
         /*-------------------------------------------*/
@@ -132,16 +147,24 @@ public class MainActivity extends Activity {
         datos.add(dis5);
 
 
-        ad = new Adaptador(this, R.layout.lista_detalle, datos);
-        final ListView ls = (ListView)findViewById(R.id.lvLista);
-        ls.setAdapter(ad);
-        registerForContextMenu(ls);
+        mostrarDiscos();
 
     }
 
     private void tostada(String s){
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
+
+
+    // METODOS DE VISUALIZACION
+
+    public void mostrarDiscos(){
+        ad = new Adaptador(this, R.layout.lista_detalle, datos);
+        final ListView ls = (ListView)findViewById(R.id.lvLista);
+        ls.setAdapter(ad);
+        registerForContextMenu(ls);
+    }
+
 
     public boolean anadir(){
         final AlertDialog.Builder alert= new AlertDialog.Builder(this);
@@ -150,20 +173,6 @@ public class MainActivity extends Activity {
         LayoutInflater inflater = LayoutInflater.from(this);
         final View vista = inflater.inflate(R.layout.anadir, null);
         alert.setView(vista);
-
-        //setContentView(R.layout.anadir);
-        String[] spinnerArray = {"Parlophone", "Sony", "Warner Music"};
-        //Spinner selectDiscografica = (Spinner)findViewById(R.id.discografica);
-
-        //setContentView(R.layout.anadir);
-        ArrayAdapter<String> adapter_state = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, spinnerArray);
-        adapter_state.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //selectDiscografica.setAdapter(adapter_state);
-
-
-        //ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, spinnerArray); //selected item will look like a spinner set from XML
-        //spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //selectDiscografica.setAdapter(spinnerArrayAdapter);
 
         ivCover = (ImageView)vista.findViewById(R.id.ivCover);
         ivCover.setImageBitmap(caratuladefault);
@@ -178,11 +187,9 @@ public class MainActivity extends Activity {
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 EditText et1,et2, discografica;
-                Spinner sp1;
                 et1 = (EditText) vista.findViewById(R.id.etAlbum);
                 et2 = (EditText) vista.findViewById(R.id.etAutor);
                 discografica = (EditText) vista.findViewById(R.id.etDiscografica);
-                //sp1 = (Spinner) vista.findViewById(R.id.discografica);
                 ivCover = (ImageView)vista.findViewById(R.id.ivCover);
                 ivCover.setImageBitmap(caratuladefault);
 
