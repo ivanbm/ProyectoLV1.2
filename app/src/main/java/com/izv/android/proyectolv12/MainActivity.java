@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -33,10 +35,12 @@ public class MainActivity extends Activity {
 
     private ArrayList<Disco> datos;
     private Adaptador ad;
-    private Bitmap caratula, caratuladefault;
+    private String caratula;
+    private Bitmap caratuladefault;
     private ImageView ivCover;
     private boolean coverSeleccionada;
-    private final int SELECT_IMAGE = 1;
+    private final int SELECT_IMAGE = 0;
+    private final int ANADIR_DISCO = 1;
 
 
     /*-------------------------------------------*/
@@ -91,10 +95,10 @@ public class MainActivity extends Activity {
                 return true;
             case R.id.elimiar:
                 info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                datos.remove(info.position);
-                Collections.sort(datos);
+                int index2 = info.position;
+                eliminar(index2);
                 ad.notifyDataSetChanged();
-                tostada(getString(R.string.msgeliminar));
+
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -111,6 +115,9 @@ public class MainActivity extends Activity {
         inflater.inflate(R.menu.contextual, menu);
     }
 
+        /*-------------------------------------------*/
+        /*          METODOS CAMBIO ORIENTACION       */
+        /*-------------------------------------------*/
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -126,6 +133,9 @@ public class MainActivity extends Activity {
         mostrarDiscos();
     }
 
+
+
+
         /*-------------------------------------------*/
         /*              METODOS PROPIOS              */
         /*-------------------------------------------*/
@@ -135,17 +145,19 @@ public class MainActivity extends Activity {
         Bitmap def = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.nocover);
         caratuladefault = Bitmap.createScaledBitmap(def, 200, 200, false);
         coverSeleccionada = false;
-        Disco dis1 = new Disco("Ghost Stories", "Coldplay", "Sony Music", BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.coldplay));
-        Disco dis2 = new Disco("Memories", "David Guetta", "Parlophone",BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.davidguetta));
-        Disco dis3 = new Disco("V", "Maroon 5", "Warner Music",BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.maroon5));
-        Disco dis4 = new Disco("Demons", "Imagine Dragons", "Virgin Music",BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.imaginedragons));
-        Disco dis5 = new Disco("Songs Of Innocence", "U2", "Warner Music",BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.u2));
+        /*Disco dis1 = new Disco("Ghost Stories", "Coldplay", "Sony Music", caratula);
+        Disco dis2 = new Disco("Memories", "David Guetta", "Parlophone", caratula);
+        Disco dis3 = new Disco("V", "Maroon 5", "Warner Music", caratula);
+        Disco dis4 = new Disco("Demons", "Imagine Dragons", "Virgin Music", caratula);
+        Disco dis5 = new Disco("Songs Of Innocence", "U2", "Warner Music", caratula);
         datos.add(dis1);
         datos.add(dis2);
         datos.add(dis3);
         datos.add(dis4);
-        datos.add(dis5);
+        datos.add(dis5);*/
 
+        ClaseXML cxml = new ClaseXML();
+        datos = cxml.leer(getApplicationContext());
 
         mostrarDiscos();
 
@@ -156,7 +168,9 @@ public class MainActivity extends Activity {
     }
 
 
-    // METODOS DE VISUALIZACION
+    /*-------------------------------------*/
+    /*--       VISTUALIZAR DISCOS        --*/
+    /*-------------------------------------*/
 
     public void mostrarDiscos(){
         ad = new Adaptador(this, R.layout.lista_detalle, datos);
@@ -165,49 +179,12 @@ public class MainActivity extends Activity {
         registerForContextMenu(ls);
     }
 
-
-    public boolean anadir(){
-        final AlertDialog.Builder alert= new AlertDialog.Builder(this);
-        alert.setTitle(R.string.tituloAnadir);
-
-        LayoutInflater inflater = LayoutInflater.from(this);
-        final View vista = inflater.inflate(R.layout.anadir, null);
-        alert.setView(vista);
-
-        ivCover = (ImageView)vista.findViewById(R.id.ivCover);
-        ivCover.setImageBitmap(caratuladefault);
-
-        ivCover.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                selectFoto(view);
-            }
-        });
-
-        alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                EditText et1,et2, discografica;
-                et1 = (EditText) vista.findViewById(R.id.etAlbum);
-                et2 = (EditText) vista.findViewById(R.id.etAutor);
-                discografica = (EditText) vista.findViewById(R.id.etDiscografica);
-                ivCover = (ImageView)vista.findViewById(R.id.ivCover);
-                ivCover.setImageBitmap(caratuladefault);
-
-                if(coverSeleccionada) {
-                    datos.add(new Disco(et1.getText().toString(), et2.getText().toString(), discografica.getText().toString(), caratula));
-                }else{
-                    datos.add(new Disco(et1.getText().toString(), et2.getText().toString(), discografica.getText().toString(), caratuladefault));
-                }
-                coverSeleccionada = false;
-                Collections.sort(datos);
-                ad.notifyDataSetChanged();
-                tostada(getString(R.string.msganadir));
-            }
-        });
-        alert.setNegativeButton(android.R.string.no ,null);
-        alert.show();
-
-        return true;
+    /*-------------------------------------*/
+    /*--           AÑADIR DISCO          --*/
+    /*-------------------------------------*/
+    public void anadir(){
+        Intent i = new Intent(this,Anadir.class);
+        startActivityForResult(i, ANADIR_DISCO);
     }
 
 
@@ -217,9 +194,10 @@ public class MainActivity extends Activity {
 
 
     public boolean editar(final int index){
-        String aut = datos.get(index).getAutor();
-        String alb = datos.get(index).getAlbum();
-        String dis = datos.get(index).getDiscografica();
+        final String aut = datos.get(index).getAutor();
+        final String alb = datos.get(index).getAlbum();
+        final String dis = datos.get(index).getDiscografica();
+        final String caratulaold = datos.get(index).getImagen();
 
         final AlertDialog.Builder alert= new AlertDialog.Builder(this);
         alert.setTitle(R.string.tituloEditar);
@@ -238,7 +216,14 @@ public class MainActivity extends Activity {
         et1.setText(alb);
         et2.setText(aut);
         discografica.setText(dis);
-        ivCover.setImageBitmap(datos.get(index).getImagen());
+
+        if(!datos.get(index).getImagen().equals("vacio")) {
+            Bitmap bitmap = BitmapFactory.decodeFile(datos.get(index).getImagen());
+            Bitmap img = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
+            ivCover.setImageBitmap(img);
+        }else{
+            ivCover.setImageResource(R.drawable.ic_launcher);
+        }
         caratula = datos.get(index).getImagen();
 
         ivCover.setOnClickListener(new View.OnClickListener() {
@@ -250,16 +235,43 @@ public class MainActivity extends Activity {
 
         alert.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                datos.set(index, new Disco(et1.getText().toString(),et2.getText().toString(), discografica.getText().toString(),caratula));
+                Disco antiguoDisco = new Disco(alb, aut, dis, caratulaold);
+                Disco nuevoDisco = new Disco(et1.getText().toString(),et2.getText().toString(), discografica.getText().toString(),caratula);
+                //datos.set(index, nuevoDisco);
                 Collections.sort(datos);
+
+                ClaseXML cxml = new ClaseXML();
+                cxml.modificar(getApplicationContext(), datos, nuevoDisco, antiguoDisco);
+
                 ad.notifyDataSetChanged();
                 tostada(getString(R.string.msgeditar));
+                mostrarDiscos();
             }
         });
         alert.setNegativeButton(android.R.string.no ,null);
         alert.show();
 
         return true;
+    }
+
+
+    /*-------------------------------------*/
+    /*--        ELIMINAR0 DISCO           --*/
+    /*-------------------------------------*/
+
+    public void eliminar(int index){
+        String aut = datos.get(index).getAutor();
+        String alb = datos.get(index).getAlbum();
+        String dis = datos.get(index).getDiscografica();
+        String caratulaold = datos.get(index).getImagen();
+        Disco d = new Disco(alb,aut,dis,caratulaold);
+
+        ClaseXML cxml = new ClaseXML();
+        cxml.eliminar(getApplicationContext(), datos, d);
+
+        Collections.sort(datos);
+        tostada(getString(R.string.msgeliminar));
+        mostrarDiscos();
     }
 
 
@@ -274,11 +286,32 @@ public class MainActivity extends Activity {
             switch (requestCode) {
                 case SELECT_IMAGE:
                     Uri selectedImageUri = data.getData();
-                    String path = getPath(getApplicationContext(), selectedImageUri);
-                    Bitmap bitmap = BitmapFactory.decodeFile(path);
-                    caratula = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
-                    ivCover.setImageBitmap(caratula);
+                    caratula = getPath(getApplicationContext(), selectedImageUri);
+                    Bitmap bitmap = BitmapFactory.decodeFile(caratula);
+                    ivCover.setImageBitmap(Bitmap.createScaledBitmap(bitmap, 200, 200, false));
                     coverSeleccionada = true;
+                    break;
+
+                case ANADIR_DISCO:
+                    String alb, aut, dis, car;
+                    Bundle dsc = data.getExtras();
+                    aut = dsc.getString("autor");
+                    alb = dsc.getString("album");
+                    dis = dsc.getString("discografica");
+                    car = dsc.getString("cover");
+                    if(car == null){
+                        car = "vacio";
+                    }
+
+                    datos.add(new Disco(aut,alb,dis,car));
+
+                    ClaseXML cxml = new ClaseXML();
+                    cxml.nuevoArchivo(getApplicationContext(),datos);
+                    datos = cxml.leer(getApplicationContext());
+
+                    mostrarDiscos();
+                    ad.notifyDataSetChanged();
+                    tostada(getString(R.string.msganadir));
                     break;
             }
         }else{
@@ -320,9 +353,6 @@ public class MainActivity extends Activity {
             }
         });
         ad.notifyDataSetChanged();
-        for (int i = 0; i < datos.size() ; i++) {
-            System.out.println(datos.get(i).getAutor());
-        }
     }
 
     public void ordenarAutor(){
@@ -333,7 +363,6 @@ public class MainActivity extends Activity {
             }
         });
         ad.notifyDataSetChanged();
-
     }
 
 }

@@ -2,6 +2,7 @@ package com.izv.android.proyectolv12;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
@@ -64,26 +65,18 @@ public class Adaptador extends ArrayAdapter<Disco> {
         vh.tv1.setText(lista.get(position).getAlbum());
         vh.tv2.setText(lista.get(position).getAutor());
         vh.tv3.setText(lista.get(position).getDiscografica());
-        Bitmap caratula = Bitmap.createScaledBitmap(lista.get(position).getImagen(), 200, 200, false);
-        caratula = getRoundedCornerBitmap(caratula);
-        vh.iv.setImageBitmap(caratula);
+
+        if(lista.get(position).getImagen().equals("vacio")) {
+            vh.iv.setImageResource(R.drawable.ic_launcher);
+            System.out.println("ENTRA");
+        }else{
+            Bitmap bitmap = BitmapFactory.decodeFile(lista.get(position).getImagen());
+            Bitmap caratula = Bitmap.createScaledBitmap(bitmap, 200, 200, false);
+            caratula = getRoundedCornerBitmap(caratula);
+            vh.iv.setImageBitmap(caratula);
+        }
         vh.iv.setTag(position);
 
-        /*if(lista.get(position).getAutor()=="Coldplay"){
-            img = R.drawable.coldplay;
-        }else if (lista.get(position).getAutor()=="Imagine Dragons"){
-            img = R.drawable.imaginedragons;
-        }else if (lista.get(position).getAutor()=="David Guetta"){
-            img = R.drawable.davidguetta;
-        }else if (lista.get(position).getAutor()=="U2"){
-            img = R.drawable.u2;
-        }else if (lista.get(position).getAutor()=="Maroon 5"){
-            img = R.drawable.maroon5;
-        }else{
-            img = R.drawable.nocover;
-        }
-
-        vh.iv1.setImageResource(img);*/
         return convertView;
     }
 

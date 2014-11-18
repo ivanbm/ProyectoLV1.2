@@ -1,16 +1,45 @@
 package com.izv.android.proyectolv12;
 
-import android.graphics.Bitmap;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 /**
  * Created by Ivan on 30/09/2014.
  */
-public class Disco implements Comparable<Disco>{
+public class Disco implements Comparable<Disco>, Parcelable{
 
-    private String album, autor, discografica;
-    private Bitmap imagen;
+    private String album, autor, discografica, imagen;
 
-    public Disco(String album, String autor, String discografica, Bitmap imagen) {
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(album);
+        parcel.writeString(autor);
+        parcel.writeString(discografica);
+        parcel.writeString(imagen);
+    }
+
+    public Disco(Parcel p){
+        this(p.readString(), p.readString(), p.readString(), p.readString());
+    }
+
+    public static final Parcelable.Creator<Disco> CREATOR = new Parcelable.Creator<Disco>() {
+        @Override
+        public Disco createFromParcel(Parcel parcel) {
+            return new Disco(parcel);
+        }
+        @Override
+        public Disco[] newArray(int size) {
+            return new Disco[size];
+        }
+    };
+
+
+    public Disco(String album, String autor, String discografica, String imagen) {
         this.album = album;
         this.autor = autor;
         this.discografica = discografica;
@@ -41,11 +70,11 @@ public class Disco implements Comparable<Disco>{
         this.discografica = discografica;
     }
 
-    public Bitmap getImagen() {
+    public String getImagen() {
         return imagen;
     }
 
-    public void setImagen(Bitmap imagen) {
+    public void setImagen(String imagen) {
         this.imagen = imagen;
     }
 
