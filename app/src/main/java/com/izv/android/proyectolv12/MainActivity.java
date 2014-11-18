@@ -82,21 +82,18 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        int index = info.position;
         switch (item.getItemId()){
 
             case R.id.editar:
-                AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                //1. obtenemos el indice
-                int index = info.position;
                 editar(index);
                 ad.notifyDataSetChanged();
 
                 return true;
+
             case R.id.elimiar:
-                info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-                int index2 = info.position;
-                eliminar(index2);
+                eliminar(index);
                 ad.notifyDataSetChanged();
 
                 return true;
