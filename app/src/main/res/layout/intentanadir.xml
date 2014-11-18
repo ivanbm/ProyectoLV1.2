@@ -10,7 +10,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="47dp">
+        android:layout_height="wrap_content">
 
         <EditText
             android:layout_width="wrap_content"
@@ -51,14 +51,14 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:layout_width="260dp"
-        android:layout_height="242dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:weightSum="1">
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="92dp"
+            android:layout_height="85dp"
             android:id="@+id/ivCover"
             android:layout_gravity="center_horizontal" />
 
@@ -67,7 +67,7 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent">
+        android:layout_height="wrap_content">
 
         <Button
             android:layout_width="177dp"
