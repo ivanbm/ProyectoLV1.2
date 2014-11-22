@@ -127,7 +127,7 @@ public class MainActivity extends Activity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         datos = (ArrayList<Disco>)savedInstanceState.getSerializable("discos");
-        mostrarDiscos();
+        //mostrarDiscos();
     }
 
 
@@ -142,16 +142,6 @@ public class MainActivity extends Activity {
         Bitmap def = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.nocover);
         caratuladefault = Bitmap.createScaledBitmap(def, 200, 200, false);
         coverSeleccionada = false;
-        /*Disco dis1 = new Disco("Ghost Stories", "Coldplay", "Sony Music", caratula);
-        Disco dis2 = new Disco("Memories", "David Guetta", "Parlophone", caratula);
-        Disco dis3 = new Disco("V", "Maroon 5", "Warner Music", caratula);
-        Disco dis4 = new Disco("Demons", "Imagine Dragons", "Virgin Music", caratula);
-        Disco dis5 = new Disco("Songs Of Innocence", "U2", "Warner Music", caratula);
-        datos.add(dis1);
-        datos.add(dis2);
-        datos.add(dis3);
-        datos.add(dis4);
-        datos.add(dis5);*/
 
         ClaseXML cxml = new ClaseXML();
         datos = cxml.leer(getApplicationContext());
@@ -253,7 +243,7 @@ public class MainActivity extends Activity {
 
 
     /*-------------------------------------*/
-    /*--        ELIMINAR0 DISCO           --*/
+    /*--        ELIMINAR DISCO           --*/
     /*-------------------------------------*/
 
     public void eliminar(int index){

@@ -10,8 +10,11 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
 
 /**
  * Created by Ivan on 15/11/2014.
@@ -22,13 +25,16 @@ public class Anadir extends MainActivity{
     private final int SELECT_IMAGE_ADD = 2;
     private boolean coverSeleccionada;
     private ImageView ivCover;
+    private ArrayList<Disco> datos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.intentanadir);
         initComponents();
+        System.out.println("VISTA "+(ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0));
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
